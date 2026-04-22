@@ -65,32 +65,12 @@ Claude calls the MCP tool instead of `bash`. This server runs the command, captu
 [Claude] ← summary; can call read_log_section("grd_abc123", grep="...") for detail
 ```
 
-## Install
+## Install (manual)
+
+See **[Quick start](#quick-start)** at the top for the common path (via MCP config). If you want to invoke the server binary directly:
 
 ```bash
-npx claude-log-compressor@latest   # smoke test it starts
-```
-
-Add to your Claude Code MCP config (`~/.claude/mcp.json` or project `.claude/mcp.json`):
-
-```json
-{
-  "mcpServers": {
-    "log-compressor": {
-      "command": "npx",
-      "args": ["-y", "claude-log-compressor@latest"]
-    }
-  }
-}
-```
-
-Then in the same session (or your project `CLAUDE.md`), tell the model to prefer `smart_*` over bash for noisy commands:
-
-```markdown
-## Build/test commands
-Always use `smart_build` and `smart_test` (from the log-compressor MCP server)
-instead of invoking gradle/npm/jest/pytest directly via bash. They return the
-same information in 5–10× fewer tokens.
+npx claude-log-compressor@latest   # smoke test it starts, then Ctrl-C
 ```
 
 ## Tools

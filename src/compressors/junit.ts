@@ -1,5 +1,6 @@
 import { estimateTokens } from "../tokens.js";
 import type { ClassifierInput, CompressContext, CompressedResult, Compressor } from "../types.js";
+import { gradleCompressor } from "./gradle.js";
 
 // Gradle test reporter format: `com.foo.BarTest > testBaz STATUS` (plain form).
 const TEST_RESULT_RE = /^(\S+(?:\.\S+)+)\s+>\s+(.+?)\s+(PASSED|FAILED|SKIPPED)\s*$/;
@@ -85,6 +86,13 @@ export const junitCompressor: Compressor = {
       }
     }
     if (current) failures.push(current);
+
+    // If the gradle test task was UP-TO-DATE (cached), there's no per-test
+    // output at all. Fall back to the gradle compressor so Claude still sees
+    // BUILD SUCCESSFUL/FAILED + duration + any warnings emitted during config.
+    if (!summary && failures.length === 0 && passedCount === 0 && skippedCount === 0) {
+      return gradleCompressor.compress(fullLog, context);
+    }
 
     const body = buildBody({ summary, failures, passedCount, skippedCount });
     const summaryLine = buildSummary(summary, failures.length, passedCount, skippedCount);

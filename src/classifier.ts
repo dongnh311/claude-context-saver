@@ -13,7 +13,10 @@ export function classify(input: ClassifierInput): OutputKind {
   if (hasJunitSignature) return "junit";
 
   if (/\b(gradle|gradlew)\b/.test(cmd)) {
-    if (/\btest\b/.test(cmd)) return "junit";
+    // Any gradle task containing "test" is a test task in practice: `test`,
+    // `testDebugUnitTest`, `connectedAndroidTest`, `testReleaseCoverage`, etc.
+    // Non-test gradle tasks with "test" in the name are vanishingly rare.
+    if (/test/.test(cmd)) return "junit";
     return "gradle";
   }
 

@@ -69,6 +69,7 @@ for (const r of rows) {
 
 function inferCommand(filename: string): string {
   if (filename.startsWith("gradle")) return "./gradlew build";
+  if (filename.startsWith("junit")) return "./gradlew test";
   if (filename.startsWith("npm")) return "npm install";
   if (filename.startsWith("jest")) return "npx jest";
   if (filename.startsWith("pytest")) return "pytest";

@@ -1,62 +1,34 @@
-#!/usr/bin/env node
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { appendFileSync } from "node:fs";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
+import { pruneExpired, serverLogPath } from "./cache.js";
+import { createServer } from "./server.js";
 
-const server = new Server(
-  {
-    name: "smart-log-compress-mcp",
-    version: "0.0.1",
-  },
-  {
-    capabilities: {
-      tools: {},
-    },
-  },
-);
+function log(msg: string): void {
+  // Diagnostic logs MUST NOT go to stdout (stdio transport uses it).
+  try {
+    appendFileSync(serverLogPath(), `${new Date().toISOString()} ${msg}\n`);
+  } catch {
+    // ignore — last resort, stderr
+    process.stderr.write(`${msg}\n`);
+  }
+}
 
-server.setRequestHandler(ListToolsRequestSchema, async () => {
-  return {
-    tools: [
-      {
-        name: "smart_run",
-        description:
-          "Run an arbitrary shell command and return a compressed summary of its output. Full output is cached; use get_full_output to retrieve it.",
-        inputSchema: {
-          type: "object",
-          properties: {
-            command: { type: "string", description: "Shell command to run" },
-            cwd: { type: "string", description: "Working directory" },
-          },
-          required: ["command"],
-        },
-      },
-    ],
-  };
-});
+async function main(): Promise<void> {
+  try {
+    const pruned = pruneExpired();
+    if (pruned > 0) log(`pruned ${pruned} expired log(s)`);
+  } catch (err) {
+    log(`prune failed: ${err}`);
+  }
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  const { name } = request.params;
-  return {
-    content: [
-      {
-        type: "text",
-        text: `[stub] tool '${name}' not yet implemented`,
-      },
-    ],
-    isError: true,
-  };
-});
-
-async function main() {
+  const server = createServer();
   const transport = new StdioServerTransport();
   await server.connect(transport);
+  log("server connected over stdio");
 }
 
 main().catch((err) => {
-  console.error("[smart-log-compress-mcp] fatal:", err);
+  log(`fatal: ${err instanceof Error ? err.stack : String(err)}`);
+  process.stderr.write(`[claude-log-compressor] fatal: ${err}\n`);
   process.exit(1);
 });

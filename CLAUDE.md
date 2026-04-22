@@ -4,85 +4,106 @@ Guidance for Claude Code working on this repo.
 
 ## Project
 
-**smart-log-compress-mcp** — MCP server that compresses tool output (build/test/install logs, stack traces) before it reaches Claude's context. Claude calls this server's tools instead of running `bash` directly; the server runs the command, classifies the output, runs a type-specific compressor, caches the full log, and returns only a compact summary.
+**claude-log-compressor** — An MCP server that intercepts build/test/install commands, runs them, and returns a compressed summary to Claude instead of raw multi-thousand-token output. Goal: cut context consumption for Claude Code users (especially Pro tier) during iterative build/test loops.
 
-Full spec: `spec.md`. Target: >80% token reduction on typical build/test/install/stacktrace logs.
+Authoritative implementation spec: **`SPEC.md`**. High-level pitch/roadmap: `spec-overview.md`.
 
-## Stack
+Success bar (see SPEC §2): on a real Android Gradle project, `smart_build` returns < 15% of original log tokens while preserving 100% of error messages.
 
-- Language: TypeScript, ESM, Node ≥ 20
-- MCP: `@modelcontextprotocol/sdk` over stdio
-- Process execution: `execa`
-- ANSI stripping: `strip-ansi`
-- Token counting: `tiktoken`
-- Config: `smol-toml` + `zod`
-- Bundler: `esbuild` (single-file ESM bundle to `dist/index.js`)
-- Tests: `vitest`
-- Distribution: `npx smart-log-compress-mcp@latest`
+## Stack & constraints
+
+- TypeScript strict mode, Node ≥ 18, ESM.
+- **Runtime deps: `@modelcontextprotocol/sdk` only.** Everything else must come from Node stdlib (`child_process`, `fs`, `path`, `crypto`, `os`). Do NOT add `execa`, `strip-ansi`, `tiktoken`, `zod`, etc. If you think you need one, re-read this line.
+- Build: `tsc` (no bundler — MCP servers are small, keep it simple).
+- Tests: `vitest`.
+- Lint/format: `biome` (single tool, zero fuss).
+- Distribution: `npx claude-log-compressor` via npm.
 
 ## Layout
 
 ```
 src/
-  index.ts              # MCP server entrypoint (stdio transport)
-  compressors/          # one file per compressor
-    build.ts            # gradle/maven/cargo/go
-    test.ts             # jest/vitest/pytest/junit
-    install.ts          # npm/pip/gem/apt
-    stacktrace.ts       # java/kotlin/python/js
-    generic.ts          # dedupe + truncate fallback
-    classifier.ts       # pick compressor from raw output
-  cache/                # on-disk full-log cache (uuid → file, TTL 24h)
-  config/               # .claude-log-compress.toml loader (zod-validated)
-tests/                  # vitest
-fixtures/               # real log samples for benchmark (gradle/npm/jest/…)
-spec.md                 # full spec
+  index.ts                    # shebang entrypoint, prune cache, connect stdio
+  server.ts                   # MCP tool registration + dispatch
+  executor.ts                 # spawn wrapper (timeout, maxBuffer, stripAnsi)
+  classifier.ts               # command + firstKb → OutputKind
+  cache.ts                    # ~/.cache/claude-log-compressor/<logId>.log, 7d TTL
+  tokens.ts                   # chars/4 estimator (MVP heuristic)
+  types.ts                    # Compressor, CompressedResult, ExecResult, etc.
+  tools/
+    smart-run.ts              # any command → classify → compress
+    smart-build.ts            # gradle/npm/cargo/make dispatch
+    smart-test.ts             # jest/pytest/junit/go dispatch
+    read-log-section.ts       # grep + line-range over cached log
+  compressors/
+    index.ts                  # registry/dispatcher
+    generic.ts                # dedupe consecutive + preserve /error|fail|…/ + middle-truncate
+    gradle.ts                 # M3
+    npm.ts                    # M4
+    jest.ts                   # M4
+    pytest.ts                 # M4
+    junit.ts                  # M4
+test/
+  fixtures/                   # real captured logs (gradle-success.log, jest-*.log, …)
 ```
 
-## Pipeline
+## Pipeline (§3 of SPEC)
 
 ```
-raw output → size check (<500 tok → passthrough)
-           → classifier (regex/heuristic)
-           → type-specific compressor
-           → cache full log to disk
-           → format response (summary + stats + reference id)
+raw output → executor (stripAnsi, timeout, maxBuffer)
+           → classifier (command + firstKb 1KB)
+           → compressor (type-specific, falls back to generic)
+           → cache full log to ~/.cache/claude-log-compressor/<logId>.log
+           → format response (summary + body + stats + log_id hint)
 ```
 
-Every compressed response MUST include a reference id so Claude can call `get_full_output(id, grep?)` to retrieve the original.
+Every response MUST include the `log_id` and a hint that `read_log_section` exists — Claude needs to know the escape hatch.
 
-## Exposed MCP tools
+## Response format (§7 of SPEC — don't change without updating SPEC)
 
-- `smart_run` — run any command, auto-classify
-- `smart_build` — build tools (gradle/npm/cargo/make)
-- `smart_test` — test runners (pytest/jest/junit)
-- `smart_read_log` — read large log files with grep/section
-- `get_full_output` — pull the cached full log by id
+```
+<summary line with status>
+
+<body: errors, warnings (with dedupe counts), final task>
+
+---
+[Compressed from ~X tokens → ~Y tokens (Z% reduction)]
+[Full log cached as log_id="prefix_abc123". Use read_log_section to query details.]
+```
+
+Log IDs are prefixed by output kind: `grd_…`, `npm_…`, `jest_…`, `pytest_…`, `junit_…`, `generic_…`.
 
 ## Conventions
 
-- Never silently drop errors from raw output. If unsure, fall back to `GenericCompressor` (dedupe + truncate) rather than an aggressive type-specific one.
-- Always cache the full log before returning, even for short outputs — users need `--passthrough` / diff modes to trust the tool.
-- Response format is fixed (see spec §3.3): status line, `[ERRORS]`, `[WARNINGS]` (with dedupe count), `[STATS]`, `[FULL LOG] id=…`.
-- Token counts in `[STATS]` must use `tiktoken` with Claude's tokenizer, not char/4 estimates.
-- Config is per-project (`.claude-log-compress.toml` at repo root). Schema lives in `src/config/` and is zod-validated.
-
-## MVP scope (do not expand without explicit ask)
-
-Week 1: skeleton + `smart_run` + classifier + `BuildCompressor` (gradle) + `TestCompressor` (jest/vitest) + cache + `get_full_output` + TOML config loader.
-
-Week 2: `InstallCompressor` (npm/pip), `StackTraceCompressor` (Java/Kotlin/JS), tiktoken integration, benchmark fixtures, npm publish.
-
-Out of scope for MVP: streaming output, pytest, auto-detect project type, UI/dashboard, plugin system, learning mode.
+- **stdout is the MCP transport — never write to it.** Diagnostic logs go to `~/.cache/claude-log-compressor/server.log` via `cache.ts#serverLogPath`. Use `process.stderr` only for last-resort fatals.
+- Every tool handler wraps its body in try/catch (done in `server.ts`). Never let an exception crash the MCP server.
+- Every compressor must **always preserve lines matching `/error|fail(ed|ure)?|exception|fatal|panic/i`** — dropping a real error is the only unrecoverable bug. When in doubt, fall back to generic.
+- Strip ANSI in the executor, not in compressors.
+- No `any` without a justification comment. Brute-force readable code beats clever functional chains — SPEC §11.
+- Keep log IDs short but collision-safe: `<prefix>_<12 hex>`.
+- Cache cleanup: prune logs older than 7 days at server start (happens in `index.ts#main`).
 
 ## Commands
 
-- `npm run dev` — run server via `tsx` (for local MCP wiring)
-- `npm run build` — esbuild bundle to `dist/index.js`
+- `npm run build` — `tsc` → `dist/`, postbuild adds shebang + chmod +x
+- `npm run dev` — `tsc --watch`
 - `npm run typecheck` — `tsc --noEmit`
 - `npm test` — vitest once
-- `npm run test:watch` — vitest watch mode
+- `npm run lint` / `npm run format` — biome
+- `npx @modelcontextprotocol/inspector node dist/index.js` — manually exercise tools
 
-## Benchmarking
+## MVP milestones (SPEC §8 — do not expand without explicit ask)
 
-Fixtures in `fixtures/` are real log captures. Every compressor must have a corresponding fixture and a test that asserts ≥ target reduction (see spec §8 table) — if a compressor change drops reduction below target, treat it as a regression.
+- **M1** scaffolding — done at commit of this refactor.
+- **M2** executor + generic compressor + `smart_run` — generic.ts wired, real error paths next.
+- **M3** gradle compressor + `smart_build` auto-detect + fixtures.
+- **M4** npm + jest + pytest + junit compressors + `smart_test` auto-detect.
+- **M5** `read_log_section` polish (grep + context + line range + token cap).
+- **M6** README with benchmark table, demo recording, CI, npm publish.
+- **M7** real Claude Code dogfood on an Android project, measure token delta, tag v0.1.0.
+
+Out of MVP: streaming, `.claude-log-compress.toml` config, HTTP transport, native Windows, Cargo/Maven/Go/.NET compressors, web dashboard.
+
+## Benchmark rule
+
+Every compressor ships with at least one fixture in `test/fixtures/`. A test asserts the compressor hits the target reduction % (SPEC §10 table). If a change drops reduction below target, treat it as a regression and fix it before merging.

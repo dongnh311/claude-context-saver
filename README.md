@@ -1,4 +1,4 @@
-# smart-log-compress-mcp
+# claude-log-compressor
 
 > MCP server that compresses tool output (build logs, test results, stack traces, install logs) **before** it enters Claude's context — cutting token usage by 80%+ on typical developer workflows.
 
@@ -37,7 +37,7 @@ Instead of having Claude call `bash` directly, Claude calls tools exposed by thi
 
 ## Status
 
-Early development. Spec and scope: see `spec.md`.
+Early development. Authoritative implementation spec: [`SPEC.md`](./SPEC.md). High-level pitch / roadmap: [`spec-overview.md`](./spec-overview.md).
 
 ## License
 

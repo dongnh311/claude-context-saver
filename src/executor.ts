@@ -4,7 +4,6 @@ import type { ExecOptions, ExecResult } from "./types.js";
 const DEFAULT_TIMEOUT_MS = 300_000;
 const DEFAULT_MAX_BUFFER = 32 * 1024 * 1024;
 
-// Strip ANSI color/cursor escape sequences. Implemented inline to avoid runtime deps.
 const ANSI_RE = /[\u001B\u009B][[\]()#;?]*(?:(?:(?:[a-zA-Z\d]*(?:;[a-zA-Z\d]*)*)?\u0007)|(?:(?:\d{1,4}(?:;\d{0,4})*)?[\dA-PR-TZcf-nq-uy=><~]))/g;
 
 export function stripAnsi(s: string): string {

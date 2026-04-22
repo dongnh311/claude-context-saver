@@ -1,5 +1,6 @@
 import { estimateTokens } from "../tokens.js";
 import type { ClassifierInput, CompressContext, CompressedResult, Compressor } from "../types.js";
+import { makeResult } from "../utils.js";
 
 const ERROR_RE = /\b(error|fail(ed|ure)?|exception|fatal|panic)\b/i;
 
@@ -23,20 +24,11 @@ export const genericCompressor: Compressor = {
       ? `Error-matching lines (${errorLines.length}):\n${errorLines.slice(0, 50).join("\n")}\n\n`
       : "";
 
-    const originalTokens = estimateTokens(fullLog);
     const bodyText = errorsBlock + body;
-    const compressedTokens = estimateTokens(bodyText);
-
-    return {
-      summary: errorLines.length
-        ? `Command output (${errorLines.length} error-matching lines)`
-        : "Command output",
-      body: bodyText,
-      originalTokens,
-      compressedTokens,
-      logId: context.logId,
-      truncatedSections: [],
-    };
+    const summary = errorLines.length
+      ? `Command output (${errorLines.length} error-matching lines)`
+      : "Command output";
+    return makeResult(summary, bodyText, fullLog, context);
   },
 };
 

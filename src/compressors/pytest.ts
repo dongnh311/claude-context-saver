@@ -1,5 +1,5 @@
-import { estimateTokens } from "../tokens.js";
 import type { ClassifierInput, CompressContext, CompressedResult, Compressor } from "../types.js";
+import { makeResult } from "../utils.js";
 
 const PLATFORM_RE = /^platform\s+/;
 const FAILURES_HEADER_RE = /^=+\s*FAILURES\s*=+/;
@@ -76,14 +76,7 @@ export const pytestCompressor: Compressor = {
     const body = buildBody({ platform, errorsBlock, failuresBlock, shortSummary, finalLine });
     const summary = buildSummary(finalLine, shortSummary.length);
 
-    return {
-      summary,
-      body,
-      originalTokens: estimateTokens(fullLog),
-      compressedTokens: estimateTokens(body),
-      logId: context.logId,
-      truncatedSections: [],
-    };
+    return makeResult(summary, body, fullLog, context);
   },
 };
 

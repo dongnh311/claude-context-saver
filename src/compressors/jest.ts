@@ -1,5 +1,5 @@
-import { estimateTokens } from "../tokens.js";
 import type { ClassifierInput, CompressContext, CompressedResult, Compressor } from "../types.js";
+import { makeResult } from "../utils.js";
 
 const PASS_RE = /^PASS\s+(\S+)/;
 const FAIL_RE = /^FAIL\s+(\S+)/;
@@ -117,14 +117,7 @@ export const jestCompressor: Compressor = {
     });
     const summary = buildSummary(testsLine, suitesLine, failures.length);
 
-    return {
-      summary,
-      body,
-      originalTokens: estimateTokens(fullLog),
-      compressedTokens: estimateTokens(body),
-      logId: context.logId,
-      truncatedSections: [],
-    };
+    return makeResult(summary, body, fullLog, context);
   },
 };
 

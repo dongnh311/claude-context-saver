@@ -14,21 +14,18 @@ export function detectTestFramework(cwd: string): TestFramework | null {
   if (existsSync(join(cwd, "go.mod"))) return "go";
   if (hasPyTest(cwd)) return "pytest";
 
-  const packageJson = join(cwd, "package.json");
-  if (existsSync(packageJson)) {
-    try {
-      const pkg = JSON.parse(readFileSync(packageJson, "utf8")) as {
-        dependencies?: Record<string, unknown>;
-        devDependencies?: Record<string, unknown>;
-        scripts?: Record<string, unknown>;
-      };
-      const all = { ...pkg.dependencies, ...pkg.devDependencies };
-      if ("jest" in all || "vitest" in all) return "jest";
-      const scripts = Object.values(pkg.scripts ?? {}) as string[];
-      if (scripts.some((s) => /\b(jest|vitest)\b/.test(s))) return "jest";
-    } catch {
-      // ignore malformed package.json
-    }
+  try {
+    const pkg = JSON.parse(readFileSync(join(cwd, "package.json"), "utf8")) as {
+      dependencies?: Record<string, unknown>;
+      devDependencies?: Record<string, unknown>;
+      scripts?: Record<string, unknown>;
+    };
+    const all = { ...pkg.dependencies, ...pkg.devDependencies };
+    if ("jest" in all || "vitest" in all) return "jest";
+    const scripts = Object.values(pkg.scripts ?? {}) as string[];
+    if (scripts.some((s) => /\b(jest|vitest)\b/.test(s))) return "jest";
+  } catch {
+    // no package.json or malformed
   }
 
   if (existsSync(join(cwd, "gradlew")) || hasGradleBuild(cwd)) return "junit";
@@ -39,14 +36,10 @@ export function detectTestFramework(cwd: string): TestFramework | null {
 function hasPyTest(cwd: string): boolean {
   if (existsSync(join(cwd, "pytest.ini"))) return true;
   if (existsSync(join(cwd, "conftest.py"))) return true;
-  const pyproject = join(cwd, "pyproject.toml");
-  if (existsSync(pyproject)) {
-    try {
-      const text = readFileSync(pyproject, "utf8");
-      if (/\[tool\.pytest/.test(text)) return true;
-    } catch {
-      // ignore
-    }
+  try {
+    if (/\[tool\.pytest/.test(readFileSync(join(cwd, "pyproject.toml"), "utf8"))) return true;
+  } catch {
+    // no pyproject.toml or malformed
   }
   return false;
 }

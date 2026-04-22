@@ -1,5 +1,5 @@
-import { estimateTokens } from "../tokens.js";
 import type { ClassifierInput, CompressContext, CompressedResult, Compressor } from "../types.js";
+import { makeResult } from "../utils.js";
 
 const DEPRECATION_RE = /^npm\s+warn\s+deprecated\s+(\S+):\s*(.*)$/i;
 const WARN_RE = /^npm\s+warn\s+(.*)$/i;
@@ -87,14 +87,7 @@ export const npmCompressor: Compressor = {
     });
     const summary = buildSummary(errorLines.length, deprecations.size, errCode);
 
-    return {
-      summary,
-      body,
-      originalTokens: estimateTokens(fullLog),
-      compressedTokens: estimateTokens(body),
-      logId: context.logId,
-      truncatedSections: [],
-    };
+    return makeResult(summary, body, fullLog, context);
   },
 };
 

@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import {
   CallToolRequestSchema,
@@ -8,9 +11,23 @@ import { smartBuild } from "./tools/smart-build.js";
 import { smartRun } from "./tools/smart-run.js";
 import { smartTest } from "./tools/smart-test.js";
 
+const VERSION = readVersion();
+
+function readVersion(): string {
+  try {
+    const here = dirname(fileURLToPath(import.meta.url));
+    const pkg = JSON.parse(readFileSync(join(here, "..", "package.json"), "utf8")) as {
+      version: string;
+    };
+    return pkg.version;
+  } catch {
+    return "0.0.0";
+  }
+}
+
 export function createServer(): Server {
   const server = new Server(
-    { name: "claude-log-compressor", version: "0.0.1" },
+    { name: "claude-log-compressor", version: VERSION },
     { capabilities: { tools: {} } },
   );
 

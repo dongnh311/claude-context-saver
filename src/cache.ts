@@ -6,8 +6,9 @@ import { join } from "node:path";
 const CACHE_DIR = join(homedir(), ".cache", "claude-log-compressor");
 const TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
+mkdirSync(CACHE_DIR, { recursive: true });
+
 export function cacheDir(): string {
-  mkdirSync(CACHE_DIR, { recursive: true });
   return CACHE_DIR;
 }
 
@@ -17,14 +18,13 @@ export function newLogId(prefix: string): string {
 }
 
 export async function writeLog(logId: string, content: string): Promise<string> {
-  const dir = cacheDir();
-  const path = join(dir, `${logId}.log`);
+  const path = join(CACHE_DIR, `${logId}.log`);
   await fsp.writeFile(path, content, "utf8");
   return path;
 }
 
 export async function readLog(logId: string): Promise<string | null> {
-  const path = join(cacheDir(), `${logId}.log`);
+  const path = join(CACHE_DIR, `${logId}.log`);
   try {
     return await fsp.readFile(path, "utf8");
   } catch {
@@ -33,11 +33,10 @@ export async function readLog(logId: string): Promise<string | null> {
 }
 
 export function pruneExpired(now: number = Date.now()): number {
-  const dir = cacheDir();
   let removed = 0;
-  for (const name of readdirSync(dir)) {
+  for (const name of readdirSync(CACHE_DIR)) {
     if (!name.endsWith(".log")) continue;
-    const full = join(dir, name);
+    const full = join(CACHE_DIR, name);
     try {
       const st = statSync(full);
       if (now - st.mtimeMs > TTL_MS) {
@@ -52,5 +51,5 @@ export function pruneExpired(now: number = Date.now()): number {
 }
 
 export function serverLogPath(): string {
-  return join(cacheDir(), "server.log");
+  return join(CACHE_DIR, "server.log");
 }

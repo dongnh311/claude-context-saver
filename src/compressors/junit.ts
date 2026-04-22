@@ -1,5 +1,5 @@
-import { estimateTokens } from "../tokens.js";
 import type { ClassifierInput, CompressContext, CompressedResult, Compressor } from "../types.js";
+import { makeResult } from "../utils.js";
 import { gradleCompressor } from "./gradle.js";
 
 // Gradle test reporter format: `com.foo.BarTest > testBaz STATUS` (plain form).
@@ -97,14 +97,7 @@ export const junitCompressor: Compressor = {
     const body = buildBody({ summary, failures, passedCount, skippedCount });
     const summaryLine = buildSummary(summary, failures.length, passedCount, skippedCount);
 
-    return {
-      summary: summaryLine,
-      body,
-      originalTokens: estimateTokens(fullLog),
-      compressedTokens: estimateTokens(body),
-      logId: context.logId,
-      truncatedSections: [],
-    };
+    return makeResult(summaryLine, body, fullLog, context);
   },
 };
 

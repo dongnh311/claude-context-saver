@@ -6,16 +6,10 @@ export function classify(input: ClassifierInput): OutputKind {
   const cmd = input.command.toLowerCase();
   const head = input.firstKb;
 
-  // Gradle test output is syntactically distinct from a plain gradle build —
-  // both match the gradle command, so decide based on whether the per-test
-  // `Class > test PASSED/FAILED` lines show up in the first KB.
   const hasJunitSignature = /\b\S+(?:\.\S+)+\s+>\s+\S+\s+(PASSED|FAILED|SKIPPED)\b/.test(head);
   if (hasJunitSignature) return "junit";
 
   if (/\b(gradle|gradlew)\b/.test(cmd)) {
-    // Any gradle task containing "test" is a test task in practice: `test`,
-    // `testDebugUnitTest`, `connectedAndroidTest`, `testReleaseCoverage`, etc.
-    // Non-test gradle tasks with "test" in the name are vanishingly rare.
     if (/test/.test(cmd)) return "junit";
     return "gradle";
   }

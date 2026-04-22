@@ -1,5 +1,6 @@
-import { estimateTokens } from "../tokens.js";
+import { basename } from "node:path";
 import type { ClassifierInput, CompressContext, CompressedResult, Compressor } from "../types.js";
+import { makeResult } from "../utils.js";
 
 // Kotlin/javac-style: `e: file:///path/to/File.kt:LINE:COL MESSAGE` or
 // `e: /path/File.kt:LINE:COL MESSAGE`. Also matches `w:` for warnings.
@@ -116,21 +117,9 @@ export const gradleCompressor: Compressor = {
       maxTokens: context.maxTokens,
     });
 
-    return {
-      summary,
-      body,
-      originalTokens: estimateTokens(fullLog),
-      compressedTokens: estimateTokens(body),
-      logId: context.logId,
-      truncatedSections: [],
-    };
+    return makeResult(summary, body, fullLog, context);
   },
 };
-
-function basename(path: string): string {
-  const i = path.lastIndexOf("/");
-  return i >= 0 ? path.slice(i + 1) : path;
-}
 
 interface DedupedWarnings {
   totalUnique: number;

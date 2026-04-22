@@ -35,6 +35,10 @@ Claude calls the MCP tool instead of `bash`. This server runs the command, captu
 
 ## Install
 
+```bash
+npx claude-log-compressor@latest   # smoke test it starts
+```
+
 Add to your Claude Code MCP config (`~/.claude/mcp.json` or project `.claude/mcp.json`):
 
 ```json
@@ -42,7 +46,7 @@ Add to your Claude Code MCP config (`~/.claude/mcp.json` or project `.claude/mcp
   "mcpServers": {
     "log-compressor": {
       "command": "npx",
-      "args": ["-y", "claude-log-compressor"]
+      "args": ["-y", "claude-log-compressor@latest"]
     }
   }
 }
@@ -74,9 +78,23 @@ Every compressed response ends with:
 [Full log cached as log_id="grd_abc123". Use read_log_section to query details.]
 ```
 
-## Benchmark
+## Benchmark — real Android project
 
-Measured on the synthetic fixtures in `test/fixtures/` (token counts via the chars/4 heuristic; real-world 12–20k-token logs compress substantially more):
+Measured live on `./gradlew …` against a real Android Compose + C++/NDK project (MasterCamera) with 2 modules:
+
+| Command | Raw tokens | Compressed | Reduction |
+|---|---:|---:|---:|
+| `clean :app:assembleDebug` | 2,090 | 82 | **96.1%** |
+| `clean :app:assembleRelease` (R8) | 2,720 | 82 | **97.0%** |
+| `:app:installDebug` → emulator | 955 | 3 | **99.7%** |
+| `:app:testDebugUnitTest` | 780 | 82 | **89.5%** |
+| `:app:compileDebugKotlin` (2 errors) | 667 | 114 | **82.9%** ⟵ both errors with `file:line:col` preserved |
+
+Average ≈ **93%** reduction. 100% of errors and warnings kept in every case.
+
+## Benchmark — synthetic fixtures
+
+The bundled fixtures in `test/fixtures/` are smaller (500–1,700 tokens) so their ratios are lower-bound on real logs. Real 12–20k-token logs compress substantially more — see Android numbers above.
 
 | Fixture | Kind | Original | Compressed | Reduction |
 |---|---|---:|---:|---:|
@@ -149,6 +167,12 @@ npx @modelcontextprotocol/inspector node dist/index.js   # manual tool exercise
 
 Layout, conventions, and milestones: see [`CLAUDE.md`](./CLAUDE.md).
 Spec: [`SPEC.md`](./SPEC.md) (authoritative) and [`spec-overview.md`](./spec-overview.md) (pitch/roadmap).
+
+## Links
+
+- **npm:** [`claude-log-compressor`](https://www.npmjs.com/package/claude-log-compressor)
+- **GitHub:** [dongnh311/claude-log-compressor](https://github.com/dongnh311/claude-log-compressor)
+- **Issues / feedback:** [GitHub Issues](https://github.com/dongnh311/claude-log-compressor/issues)
 
 ## License
 

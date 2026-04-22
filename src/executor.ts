@@ -20,6 +20,11 @@ export async function execCommand(opts: ExecOptions): Promise<ExecResult> {
       shell: true,
       stdio: ["ignore", "pipe", "pipe"],
       env: { ...process.env, NO_COLOR: "1", FORCE_COLOR: "0" },
+      // Put the child in its own process group so we can SIGKILL the whole
+      // tree on timeout. Without this, `shell: true` means child.kill() only
+      // terminates the shell; orphaned subprocesses (e.g. `sleep`) keep the
+      // pipes open and the `close` event never fires.
+      detached: true,
     });
 
     let stdoutBytes = 0;
@@ -29,9 +34,18 @@ export async function execCommand(opts: ExecOptions): Promise<ExecResult> {
     let timedOut = false;
     let overflow = false;
 
+    const killTree = (signal: NodeJS.Signals) => {
+      if (child.pid === undefined) return;
+      try {
+        process.kill(-child.pid, signal);
+      } catch {
+        child.kill(signal);
+      }
+    };
+
     const timer = setTimeout(() => {
       timedOut = true;
-      child.kill("SIGKILL");
+      killTree("SIGKILL");
     }, timeoutMs);
 
     child.stdout.setEncoding("utf8");
@@ -41,7 +55,7 @@ export async function execCommand(opts: ExecOptions): Promise<ExecResult> {
       stdoutBytes += Buffer.byteLength(chunk);
       if (stdoutBytes > maxBufferBytes) {
         overflow = true;
-        child.kill("SIGKILL");
+        killTree("SIGKILL");
         return;
       }
       stdoutChunks.push(chunk);
@@ -51,7 +65,7 @@ export async function execCommand(opts: ExecOptions): Promise<ExecResult> {
       stderrBytes += Buffer.byteLength(chunk);
       if (stderrBytes > maxBufferBytes) {
         overflow = true;
-        child.kill("SIGKILL");
+        killTree("SIGKILL");
         return;
       }
       stderrChunks.push(chunk);

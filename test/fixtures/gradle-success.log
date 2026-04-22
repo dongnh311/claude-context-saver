@@ -1,0 +1,91 @@
+Starting a Gradle Daemon, 1 incompatible Daemon could not be reused, use --status for details
+
+> Configure project :app
+Evaluating root project 'MyApp' using build file 'build.gradle.kts'.
+Evaluating project ':app' using build file 'app/build.gradle.kts'.
+Resolve mutations for :app:preBuild (Thread[Execution worker Thread 2,5,main]) started.
+:app:preBuild (Thread[Execution worker Thread 2,5,main]) started.
+
+> Task :app:preBuild UP-TO-DATE
+Skipping task ':app:preBuild' as it has no actions.
+:app:preBuild UP-TO-DATE
+
+> Task :app:preDebugBuild UP-TO-DATE
+Skipping task ':app:preDebugBuild' as it has no actions.
+:app:preDebugBuild UP-TO-DATE
+
+> Task :app:compileDebugAidl NO-SOURCE
+Skipping task ':app:compileDebugAidl' as it has no source files and no previous output files.
+:app:compileDebugAidl NO-SOURCE
+
+> Task :app:compileDebugRenderscript NO-SOURCE
+
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+
+> Task :app:generateDebugResValues UP-TO-DATE
+
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+
+> Task :app:generateDebugResources UP-TO-DATE
+
+> Task :app:mergeDebugResources UP-TO-DATE
+
+> Task :app:packageDebugResources UP-TO-DATE
+
+> Task :app:parseDebugLocalResources UP-TO-DATE
+
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+
+> Task :app:processDebugMainManifest UP-TO-DATE
+
+> Task :app:processDebugManifest UP-TO-DATE
+
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+
+> Task :app:processDebugResources UP-TO-DATE
+
+Download https://dl.google.com/dl/android/maven2/androidx/activity/activity/1.8.0/activity-1.8.0.pom
+Download https://dl.google.com/dl/android/maven2/androidx/core/core/1.12.0/core-1.12.0.pom
+Download https://dl.google.com/dl/android/maven2/androidx/lifecycle/lifecycle-runtime/2.6.2/lifecycle-runtime-2.6.2.pom
+Download https://dl.google.com/dl/android/maven2/androidx/activity/activity/1.8.0/activity-1.8.0.aar
+Download https://dl.google.com/dl/android/maven2/androidx/core/core/1.12.0/core-1.12.0.aar
+
+> Task :app:compileDebugKotlin
+w: file:///Users/dev/MyApp/app/src/main/java/com/example/myapp/MainActivity.kt:42:9 'setBackgroundDrawable(Drawable?): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/dev/MyApp/app/src/main/java/com/example/myapp/MainActivity.kt:55:9 'setBackgroundDrawable(Drawable?): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/dev/MyApp/app/src/main/java/com/example/myapp/MainActivity.kt:71:9 'setBackgroundDrawable(Drawable?): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/dev/MyApp/app/src/main/java/com/example/myapp/DetailActivity.kt:88:12 Parameter 'savedInstanceState' is never used
+w: file:///Users/dev/MyApp/app/src/main/java/com/example/myapp/DetailActivity.kt:102:12 Parameter 'savedInstanceState' is never used
+w: file:///Users/dev/MyApp/app/src/main/java/com/example/myapp/data/UserRepository.kt:23:5 Unused import: com.example.myapp.data.legacy.OldUser
+
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:processDebugJavaRes NO-SOURCE
+> Task :app:mergeDebugJavaResource UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :app:processDebugJavaRes NO-SOURCE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :app:mergeLibDexDebug UP-TO-DATE
+> Task :app:dexBuilderDebug UP-TO-DATE
+> Task :app:mergeProjectDexDebug UP-TO-DATE
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :app:mergeDebugNativeLibs NO-SOURCE
+> Task :app:stripDebugDebugSymbols NO-SOURCE
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+
+> Task :app:packageDebug
+> Task :app:assembleDebug
+
+BUILD SUCCESSFUL in 23s
+47 actionable tasks: 2 executed, 45 up-to-date

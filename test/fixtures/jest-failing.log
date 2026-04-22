@@ -1,0 +1,66 @@
+PASS  src/utils/format.test.ts (22ms)
+PASS  src/utils/parse.test.ts (18ms)
+FAIL  src/components/Button.test.tsx (145ms)
+  ● Button › calls onClick when clicked
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      12 |   it('calls onClick when clicked', () => {
+      13 |     const onClick = jest.fn();
+    > 14 |     render(<Button onClick={onClick} />);
+         |                                      ^
+      15 |     fireEvent.click(screen.getByRole('button'));
+      16 |     expect(onClick).toHaveBeenCalledTimes(1);
+      17 |   });
+
+      at Object.<anonymous> (src/components/Button.test.tsx:14:38)
+
+  ● Button › renders with correct label
+
+    TestingLibraryElementError: Unable to find an element with the text: Submit.
+
+      at Object.<anonymous> (src/components/Button.test.tsx:23:19)
+
+PASS  src/components/Card.test.tsx (98ms)
+PASS  src/components/Modal.test.tsx (132ms)
+PASS  src/components/Header.test.tsx (76ms)
+PASS  src/components/Footer.test.tsx (54ms)
+PASS  src/components/Sidebar.test.tsx (88ms)
+PASS  src/hooks/useAuth.test.ts (201ms)
+PASS  src/hooks/useFetch.test.ts (189ms)
+PASS  src/hooks/useDebounce.test.ts (34ms)
+PASS  src/hooks/useLocalStorage.test.ts (45ms)
+FAIL  src/pages/Dashboard.test.tsx (312ms)
+  ● Dashboard › loads user data on mount
+
+    TypeError: Cannot read properties of undefined (reading 'name')
+
+      34 |   it('loads user data on mount', async () => {
+    > 35 |     expect(screen.getByText(user.name)).toBeInTheDocument();
+         |                             ^
+
+      at Object.<anonymous> (src/pages/Dashboard.test.tsx:35:29)
+
+PASS  src/pages/Home.test.tsx (234ms)
+PASS  src/pages/Login.test.tsx (178ms)
+PASS  src/api/client.test.ts (156ms)
+PASS  src/api/auth.test.ts (203ms)
+PASS  src/api/posts.test.ts (178ms)
+PASS  src/store/userSlice.test.ts (67ms)
+PASS  src/store/postsSlice.test.ts (98ms)
+
+Summary of all failing tests
+FAIL src/components/Button.test.tsx
+  ● Button › calls onClick when clicked
+  ● Button › renders with correct label
+FAIL src/pages/Dashboard.test.tsx
+  ● Dashboard › loads user data on mount
+
+Test Suites: 2 failed, 18 passed, 20 total
+Tests:       3 failed, 144 passed, 147 total
+Snapshots:   0 total
+Time:        5.234 s, estimated 6 s
+Ran all test suites.

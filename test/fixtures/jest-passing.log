@@ -1,0 +1,26 @@
+PASS  src/utils/format.test.ts (22ms)
+PASS  src/utils/parse.test.ts (18ms)
+PASS  src/components/Button.test.tsx (145ms)
+PASS  src/components/Card.test.tsx (98ms)
+PASS  src/components/Modal.test.tsx (132ms)
+PASS  src/components/Header.test.tsx (76ms)
+PASS  src/components/Footer.test.tsx (54ms)
+PASS  src/components/Sidebar.test.tsx (88ms)
+PASS  src/hooks/useAuth.test.ts (201ms)
+PASS  src/hooks/useFetch.test.ts (189ms)
+PASS  src/hooks/useDebounce.test.ts (34ms)
+PASS  src/hooks/useLocalStorage.test.ts (45ms)
+PASS  src/pages/Home.test.tsx (234ms)
+PASS  src/pages/Login.test.tsx (178ms)
+PASS  src/pages/Dashboard.test.tsx (312ms)
+PASS  src/api/client.test.ts (156ms)
+PASS  src/api/auth.test.ts (203ms)
+PASS  src/api/posts.test.ts (178ms)
+PASS  src/store/userSlice.test.ts (67ms)
+PASS  src/store/postsSlice.test.ts (98ms)
+
+Test Suites: 20 passed, 20 total
+Tests:       147 passed, 147 total
+Snapshots:   0 total
+Time:        4.523 s, estimated 5 s
+Ran all test suites.

@@ -1,0 +1,61 @@
+> Configure project :app
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:compileDebugUnitTestJavaWithJavac
+> Task :app:processDebugUnitTestJavaRes NO-SOURCE
+
+> Task :app:testDebugUnitTest
+
+com.example.myapp.UserRepositoryTest > testUserCreate PASSED
+com.example.myapp.UserRepositoryTest > testUserUpdate PASSED
+com.example.myapp.UserRepositoryTest > testUserDelete PASSED
+com.example.myapp.UserRepositoryTest > testUserFindById PASSED
+com.example.myapp.UserRepositoryTest > testUserFindByEmail PASSED
+com.example.myapp.UserRepositoryTest > testUserListAll PASSED
+com.example.myapp.AuthServiceTest > testLoginValidCredentials PASSED
+com.example.myapp.AuthServiceTest > testLoginInvalidCredentials PASSED
+com.example.myapp.AuthServiceTest > testLogout PASSED
+com.example.myapp.AuthServiceTest > testRefreshToken FAILED
+    java.lang.AssertionError: Expected token to be refreshed but was null
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.assertNotNull(Assert.java:712)
+        at org.junit.Assert.assertNotNull(Assert.java:722)
+        at com.example.myapp.AuthServiceTest.testRefreshToken(AuthServiceTest.kt:87)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+        at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+        at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+        at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+
+com.example.myapp.PostRepositoryTest > testPostCreate PASSED
+com.example.myapp.PostRepositoryTest > testPostUpdate PASSED
+com.example.myapp.PostRepositoryTest > testPostDelete FAILED
+    java.lang.NullPointerException: Attempt to invoke virtual method on a null object reference
+        at com.example.myapp.PostRepository.delete(PostRepository.kt:45)
+        at com.example.myapp.PostRepositoryTest.testPostDelete(PostRepositoryTest.kt:102)
+        at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+        at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+
+com.example.myapp.PostRepositoryTest > testPostListAll PASSED
+com.example.myapp.PostRepositoryTest > testPostFindByUserId PASSED
+com.example.myapp.ValidationTest > testEmailValidation PASSED
+com.example.myapp.ValidationTest > testPasswordValidation PASSED
+com.example.myapp.ValidationTest > testUsernameValidation PASSED
+com.example.myapp.UtilsTest > testFormatDate PASSED
+com.example.myapp.UtilsTest > testParseDate PASSED
+com.example.myapp.UtilsTest > testStringHelpers PASSED
+
+27 tests completed, 2 failed
+
+> Task :app:testDebugUnitTest FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///Users/dev/MyApp/app/build/reports/tests/testDebugUnitTest/index.html
+
+BUILD FAILED in 12s

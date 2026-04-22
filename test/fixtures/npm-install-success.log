@@ -1,0 +1,38 @@
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+npm warn deprecated glob@5.0.15: Glob versions prior to v9 are no longer supported
+npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated rimraf@2.7.1: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated are-we-there-yet@3.0.1: This package is no longer supported.
+npm warn deprecated gauge@4.0.4: This package is no longer supported.
+npm warn deprecated npmlog@6.0.2: This package is no longer supported.
+npm warn deprecated @npmcli/move-file@2.0.1: This functionality has been moved to @npmcli/fs
+npm warn deprecated lodash.isequal@4.5.0: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
+npm warn deprecated abab@2.0.6: Use your platform's native atob() and btoa() methods instead
+npm warn deprecated domexception@4.0.0: Use your platform's native DOMException instead
+npm warn deprecated source-map-url@0.4.1: See https://github.com/lydell/source-map-url#deprecated
+npm warn deprecated urix@0.1.0: Please see https://github.com/lydell/urix#deprecated
+npm warn deprecated resolve-url@0.2.1: https://github.com/lydell/resolve-url#deprecated
+npm warn deprecated source-map-resolve@0.5.3: See https://github.com/lydell/source-map-resolve#deprecated
+npm warn deprecated sourcemap-codec@1.4.8: Please use @jridgewell/sourcemap-codec instead
+npm warn deprecated w3c-hr-time@1.0.2: Use your platform's native performance.now() and performance.timeOrigin.
+npm warn deprecated stable@0.1.8: Modern JS already guarantees Array#sort() is a stable sort, so this library is deprecated.
+npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+npm warn deprecated eslint@8.57.1: This version is no longer supported.
+npm warn deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.
+
+added 1284 packages, and audited 1285 packages in 34s
+
+167 packages are looking for funding
+  run `npm fund` for details
+
+12 vulnerabilities (3 low, 6 moderate, 2 high, 1 critical)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.

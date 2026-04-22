@@ -3,6 +3,7 @@ dist/
 build/
 *.log
 !docs/demo/*.log
+!test/fixtures/*.log
 .DS_Store
 .env
 .env.local

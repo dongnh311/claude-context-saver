@@ -1,0 +1,97 @@
+Starting a Gradle Daemon (subsequent builds will be faster)
+
+> Configure project :app
+Evaluating root project 'MyApp' using build file 'build.gradle.kts'.
+Evaluating project ':app' using build file 'app/build.gradle.kts'.
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:compileDebugAidl NO-SOURCE
+> Task :app:compileDebugRenderscript NO-SOURCE
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugJavaRes NO-SOURCE
+> Task :app:mergeDebugJavaResource UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :app:mergeLibDexDebug UP-TO-DATE
+> Task :app:dexBuilderDebug UP-TO-DATE
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :app:mergeDebugNativeLibs NO-SOURCE
+> Task :app:stripDebugDebugSymbols NO-SOURCE
+> Task :app:validateSigningDebug UP-TO-DATE
+
+Download https://dl.google.com/dl/android/maven2/androidx/activity/activity/1.8.0/activity-1.8.0.pom
+Download https://dl.google.com/dl/android/maven2/androidx/activity/activity/1.8.0/activity-1.8.0.aar
+Download https://dl.google.com/dl/android/maven2/androidx/core/core/1.12.0/core-1.12.0.pom
+Download https://dl.google.com/dl/android/maven2/androidx/core/core/1.12.0/core-1.12.0.aar
+Download https://dl.google.com/dl/android/maven2/androidx/lifecycle/lifecycle-runtime/2.6.2/lifecycle-runtime-2.6.2.pom
+Download https://dl.google.com/dl/android/maven2/androidx/lifecycle/lifecycle-runtime/2.6.2/lifecycle-runtime-2.6.2.aar
+Download https://dl.google.com/dl/android/maven2/androidx/lifecycle/lifecycle-viewmodel/2.6.2/lifecycle-viewmodel-2.6.2.pom
+Download https://dl.google.com/dl/android/maven2/androidx/lifecycle/lifecycle-viewmodel/2.6.2/lifecycle-viewmodel-2.6.2.aar
+Download https://dl.google.com/dl/android/maven2/androidx/compose/ui/ui/1.5.4/ui-1.5.4.pom
+Download https://dl.google.com/dl/android/maven2/androidx/compose/ui/ui/1.5.4/ui-1.5.4.aar
+Download https://dl.google.com/dl/android/maven2/androidx/compose/runtime/runtime/1.5.4/runtime-1.5.4.pom
+Download https://dl.google.com/dl/android/maven2/androidx/compose/runtime/runtime/1.5.4/runtime-1.5.4.aar
+Download https://dl.google.com/dl/android/maven2/androidx/compose/foundation/foundation/1.5.4/foundation-1.5.4.pom
+Download https://dl.google.com/dl/android/maven2/androidx/compose/foundation/foundation/1.5.4/foundation-1.5.4.aar
+Download https://dl.google.com/dl/android/maven2/androidx/compose/material3/material3/1.1.2/material3-1.1.2.pom
+Download https://dl.google.com/dl/android/maven2/androidx/compose/material3/material3/1.1.2/material3-1.1.2.aar
+Download https://dl.google.com/dl/android/maven2/com/squareup/okhttp3/okhttp/4.12.0/okhttp-4.12.0.pom
+Download https://dl.google.com/dl/android/maven2/com/squareup/okhttp3/okhttp/4.12.0/okhttp-4.12.0.jar
+Download https://dl.google.com/dl/android/maven2/com/squareup/retrofit2/retrofit/2.9.0/retrofit-2.9.0.pom
+Download https://dl.google.com/dl/android/maven2/com/squareup/retrofit2/retrofit/2.9.0/retrofit-2.9.0.jar
+Download https://dl.google.com/dl/android/maven2/org/jetbrains/kotlin/kotlin-stdlib/1.9.20/kotlin-stdlib-1.9.20.pom
+Download https://dl.google.com/dl/android/maven2/org/jetbrains/kotlin/kotlin-stdlib/1.9.20/kotlin-stdlib-1.9.20.jar
+Download https://dl.google.com/dl/android/maven2/org/jetbrains/kotlinx/kotlinx-coroutines-core/1.7.3/kotlinx-coroutines-core-1.7.3.pom
+Download https://dl.google.com/dl/android/maven2/org/jetbrains/kotlinx/kotlinx-coroutines-core/1.7.3/kotlinx-coroutines-core-1.7.3.jar
+Download https://dl.google.com/dl/android/maven2/com/google/dagger/hilt-android/2.48/hilt-android-2.48.pom
+Download https://dl.google.com/dl/android/maven2/com/google/dagger/hilt-android/2.48/hilt-android-2.48.aar
+
+> Task :app:compileDebugKotlin FAILED
+w: file:///Users/dev/MyApp/app/src/main/java/com/example/myapp/MainActivity.kt:42:9 'setBackgroundDrawable(Drawable?): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/dev/MyApp/app/src/main/java/com/example/myapp/MainActivity.kt:55:9 'setBackgroundDrawable(Drawable?): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/dev/MyApp/app/src/main/java/com/example/myapp/MainActivity.kt:71:9 'setBackgroundDrawable(Drawable?): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/dev/MyApp/app/src/main/java/com/example/myapp/MainActivity.kt:84:9 'setBackgroundDrawable(Drawable?): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/dev/MyApp/app/src/main/java/com/example/myapp/DetailActivity.kt:88:12 Parameter 'savedInstanceState' is never used
+w: file:///Users/dev/MyApp/app/src/main/java/com/example/myapp/DetailActivity.kt:102:12 Parameter 'savedInstanceState' is never used
+w: file:///Users/dev/MyApp/app/src/main/java/com/example/myapp/DetailActivity.kt:134:12 Parameter 'savedInstanceState' is never used
+w: file:///Users/dev/MyApp/app/src/main/java/com/example/myapp/data/UserRepository.kt:23:5 Unused import: com.example.myapp.data.legacy.OldUser
+w: file:///Users/dev/MyApp/app/src/main/java/com/example/myapp/data/PostRepository.kt:18:5 Unused import: com.example.myapp.data.legacy.OldPost
+e: file:///Users/dev/MyApp/app/src/main/java/com/example/myapp/MainActivity.kt:128:34 Unresolved reference: viewBinding
+e: file:///Users/dev/MyApp/app/src/main/java/com/example/myapp/MainActivity.kt:145:25 Type mismatch: inferred type is Int? but String was expected
+e: file:///Users/dev/MyApp/app/src/main/java/com/example/myapp/data/UserRepository.kt:67:20 Unresolved reference: legacyMapper
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugKotlin'.
+> Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 18s
+16 actionable tasks: 3 executed, 13 up-to-date
